@@ -47,7 +47,12 @@ git push -u origin main
 
 1. Go to [railway.app](https://railway.app) → **New Project**
 2. Click **Deploy from GitHub repo** → Select `ama-rag`
-3. Railway will detect the `AmaRAGBackend/Dockerfile` automatically
+3. Open your Railway service → **Settings** and confirm these monorepo settings:
+    - **Root Directory**: `/` (repo root)
+    - **Builder**: `Dockerfile`
+    - **Dockerfile Path**: `AmaRAGBackend/Dockerfile`
+
+> If Railway shows `Railpack could not determine how to build the app`, it is reading the wrong folder. The root-level `railway.json` in this repo forces Docker build from `AmaRAGBackend/Dockerfile`.
 
 ### 2b — Set Service Name
 
