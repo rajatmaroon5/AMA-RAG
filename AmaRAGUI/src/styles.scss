@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Global Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  background-color: #f5f7fb;
+}
+
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Angular Material Theme */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Common Utilities */
+.mat-mdc-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.mat-mdc-card:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Material Form Field */
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings {
+    flex-direction: column !important;
+  }
+
+  .button-group {
+    flex-direction: column !important;
+  }
+
+  button {
+    width: 100% !important;
+  }
+}

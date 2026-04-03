@@ -1,0 +1,220 @@
+<div class="sync-container">
+  <mat-card class="sync-controls-card">
+    <mat-card-header>
+      <mat-card-title>SharePoint Document Synchronization</mat-card-title>
+      <mat-card-subtitle>Sync documents from your SharePoint folder</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-tab-group>
+      <!-- Custom Sync Tab -->
+      <mat-tab label="Custom Folder Sync">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">folder</mat-icon>
+          Custom Folder Sync
+        </ng-template>
+
+        <div class="tab-content">
+          <mat-card class="sync-form-card">
+            <mat-card-content>
+              <div class="form-section">
+                <h3>Specify SharePoint Folder</h3>
+                
+                <mat-form-field class="full-width">
+                  <mat-label>SharePoint Folder Path</mat-label>
+                  <input 
+                    matInput 
+                    [(ngModel)]="folderPath"
+                    placeholder="/sites/yoursite/Shared Documents/RAG Documents"
+                    [disabled]="isLoading">
+                </mat-form-field>
+
+                <div class="example-hint">
+                  <mat-icon>info</mat-icon>
+                  <span>Example: /sites/yoursite/Shared Documents/RAG Documents</span>
+                </div>
+              </div>
+
+              <div class="button-group">
+                <button 
+                  mat-raised-button 
+                  color="primary"
+                  (click)="startSync()"
+                  [disabled]="isLoading || isSyncing || !folderPath.trim()">
+                  <mat-icon *ngIf="!isLoading">sync</mat-icon>
+                  <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                  {{ isLoading ? 'Starting...' : 'Start Sync' }}
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Default Sync Tab -->
+      <mat-tab label="Default Folder Sync">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">cloud_download</mat-icon>
+          Default Folder Sync
+        </ng-template>
+
+        <div class="tab-content">
+          <mat-card class="sync-form-card">
+            <mat-card-content>
+              <div class="form-section">
+                <h3>Sync from Configured Folder</h3>
+                <p class="description">
+                  This will sync documents from the default SharePoint folder configured in your settings.
+                </p>
+              </div>
+
+              <div class="button-group">
+                <button 
+                  mat-raised-button 
+                  color="primary"
+                  (click)="startDefaultSync()"
+                  [disabled]="isLoading || isSyncing">
+                  <mat-icon *ngIf="!isLoading">cloud_download</mat-icon>
+                  <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                  {{ isLoading ? 'Starting...' : 'Start Default Sync' }}
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Sync History Tab -->
+      <mat-tab label="Sync History">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">history</mat-icon>
+          Sync History
+        </ng-template>
+
+        <div class="tab-content">
+          <div class="history-controls">
+            <button 
+              mat-stroked-button 
+              (click)="loadSyncHistory()"
+              [disabled]="isLoading">
+              <mat-icon>refresh</mat-icon>
+              Refresh History
+            </button>
+          </div>
+
+          <mat-list class="sync-history-list" *ngIf="syncHistory.length > 0">
+            <mat-list-item *ngFor="let job of syncHistory" class="history-item">
+              <div class="history-item-content">
+                <div class="history-header">
+                  <div class="history-status" [ngClass]="getStatusClass(job.status)">
+                    {{ job.status }}
+                  </div>
+                  <span class="history-date">{{ formatDate(job.startedAt) }}</span>
+                  <span class="history-duration">
+                    Duration: {{ getDuration(job.startedAt, job.completedAt) }}
+                  </span>
+                </div>
+                <div class="history-stats">
+                  <span class="stat successful">✓ {{ job.filesSuccessful }} successful</span>
+                  <span class="stat failed">✗ {{ job.filesFailed }} failed</span>
+                  <span class="stat skipped">⊘ {{ job.filesSkipped }} skipped</span>
+                </div>
+                <div class="history-notes" *ngIf="job.notes">
+                  <small>{{ job.notes }}</small>
+                </div>
+              </div>
+            </mat-list-item>
+          </mat-list>
+
+          <div class="no-history" *ngIf="syncHistory.length === 0">
+            <mat-icon>history</mat-icon>
+            <p>No sync history available</p>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Messages -->
+    <mat-card class="message-card" *ngIf="errorMessage" [@fadeInOut]>
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="message-card" *ngIf="successMessage" [@fadeInOut]>
+      <div class="success-message">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+    </mat-card>
+  </mat-card>
+
+  <!-- Current Sync Status -->
+  <mat-card class="sync-status-card" *ngIf="isSyncing && currentSyncStatus">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="spinning">sync</mat-icon>
+        Sync in Progress
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="status-section">
+        <div class="status-item">
+          <span class="label">Status:</span>
+          <span class="value" [ngClass]="'status-' + currentSyncStatus.status.toLowerCase()">
+            {{ currentSyncStatus.status }}
+          </span>
+        </div>
+
+        <div class="status-item">
+          <span class="label">Files Discovered:</span>
+          <span class="value">{{ currentSyncStatus.filesDiscovered }}</span>
+        </div>
+
+        <div class="status-item">
+          <span class="label">Files Processed:</span>
+          <span class="value">{{ currentSyncStatus.filesProcessed }}</span>
+        </div>
+
+        <div class="status-item">
+          <span class="label">Files Failed:</span>
+          <span class="value" *ngIf="currentSyncStatus.filesFailed > 0" class="failed-count">
+            {{ currentSyncStatus.filesFailed }}
+          </span>
+          <span class="value" *ngIf="currentSyncStatus.filesFailed === 0">
+            {{ currentSyncStatus.filesFailed }}
+          </span>
+        </div>
+
+        <div class="status-item">
+          <span class="label">Files Skipped:</span>
+          <span class="value">{{ currentSyncStatus.filesSkipped }}</span>
+        </div>
+
+        <div class="progress-section">
+          <span class="label">Progress: {{ currentSyncStatus.progressPercentage | number: '1.0-0' }}%</span>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="currentSyncStatus.progressPercentage"
+            [color]="getProgressColor(currentSyncStatus.progressPercentage)">
+          </mat-progress-bar>
+        </div>
+
+        <div class="error-section" *ngIf="currentSyncStatus.errorMessage">
+          <mat-icon>warning</mat-icon>
+          <span>{{ currentSyncStatus.errorMessage }}</span>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button mat-stroked-button (click)="retryFailedDocuments()" 
+          *ngIf="!isSyncing && currentSyncStatus.filesFailed > 0"
+          [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Retry Failed Documents
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

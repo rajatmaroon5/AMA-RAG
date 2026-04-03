@@ -1,0 +1,67 @@
+name: Deploy Frontend to Azure Static Web Apps
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'AmaRAGUI/**'
+      - '.github/workflows/deploy-frontend.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    # Skip deploy on closed PRs that didn't merge
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+
+    defaults:
+      run:
+        working-directory: AmaRAGUI
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: AmaRAGUI/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Inject Railway backend URL
+        # Replaces the placeholder in environment.prod.ts with the real Railway URL
+        run: |
+          sed -i "s|RAILWAY_BACKEND_URL_PLACEHOLDER|${{ secrets.RAILWAY_BACKEND_URL }}|g" \
+            src/environments/environment.prod.ts
+
+      - name: Build Angular app
+        run: npm run build -- --configuration production
+
+      - name: Deploy to Azure Static Web Apps
+        uses: azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          app_location: /AmaRAGUI
+          output_location: dist/ama-rag-ui
+          skip_app_build: true  # We built manually above to inject the URL
+
+  close_pull_request:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    steps:
+      - name: Close staging environment
+        uses: azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: close

@@ -1,0 +1,15 @@
+AMA RAG - Artificial Intelligence for Advanced Medical Assistance
+
+This is a test document for the RAG system. It contains information about the AMA RAG Chatbot project.
+
+The AMA RAG project uses Retrieval-Augmented Generation to provide intelligent responses based on uploaded documents.
+Users can upload PDF, DOCX, or TXT files, and the system will create embeddings for semantic search.
+
+The vector store now uses an in-memory cosine similarity implementation for local development.
+This allows developers to test the RAG pipeline without external dependencies like Pinecone.
+
+Key features:
+- Document upload and processing
+- Semantic search using cosine similarity
+- Question answering with RAG
+- Query transformation and answer grading

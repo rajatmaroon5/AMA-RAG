@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA RAG CHATBOT - Professional Project Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Title Styles */
+        .title-page {
+            text-align: center;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #1976d2;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+        
+        .metadata {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        
+        .metadata p {
+            margin: 5px 0;
+        }
+        
+        h2 {
+            color: #1976d2;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1976d2;
+            padding-left: 15px;
+            page-break-after: avoid;
+        }
+        
+        h3 {
+            color: #0d47a1;
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            page-break-after: avoid;
+        }
+        
+        h4 {
+            color: #0d47a1;
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        /* Lists */
+        ul, ol {
+            margin: 15px 0;
+            margin-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        table th {
+            background-color: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        table tr:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Diagrams */
+        .diagram {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        /* Boxes */
+        .box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        
+        .box.warning {
+            background-color: #fff3e0;
+            border-left-color: #ff9800;
+        }
+        
+        .box.success {
+            background-color: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+        
+        .box.error {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+        }
+        
+        /* TOC */
+        .toc {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            page-break-after: avoid;
+        }
+        
+        .toc ol {
+            margin-left: 20px;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                padding: 0;
+                background-color: white;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                box-shadow: none;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            table {
+                page-break-inside: avoid;
+            }
+            
+            pre {
+                page-break-inside: avoid;
+            }
+            
+            .diagram {
+                page-break-inside: avoid;
+            }
+            
+            a {
+                color: #0066cc;
+            }
+        }
+        
+        /* Page Break Helper */
+        .page-break {
+            page-break-after: always;
+        }
+        
+        /* Highlight */
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title Page -->
+        <div class="title-page">
+            <h1>AMA RAG CHATBOT</h1>
+            <p class="subtitle">Professional Project Documentation</p>
+            <div class="metadata">
+                <p><strong>Version:</strong> 3.0</p>
+                <p><strong>Date:</strong> March 28, 2026</p>
+                <p><strong>Project Status:</strong> Complete with Phase 3 Integration</p>
+                <p><strong>Document Classification:</strong> Technical & User Documentation</p>
+            </div>
+        </div>
+
+        <!-- Executive Summary -->
+        <h2>Executive Summary</h2>
+        
+        <h3>Project Overview</h3>
+        <p>The AMA RAG Chatbot is an enterprise-grade Retrieval-Augmented Generation (RAG) application designed to answer user questions based on uploaded documents. By combining document analysis, semantic search, and advanced language models, the system provides accurate, context-aware answers with source attribution.</p>
+
+        <h3>Key Capabilities</h3>
+        <ul>
+            <li><strong>Document Management:</strong> Upload, store, and manage PDF and DOCX documents</li>
+            <li><strong>Intelligent Retrieval:</strong> Semantic search using vector embeddings</li>
+            <li><strong>Query Intelligence:</strong> Automatic query optimization and expansion</li>
+            <li><strong>Answer Quality:</strong> Self-grading mechanism with relevancy scoring</li>
+            <li><strong>Fallback Mechanisms:</strong> Web search integration when document knowledge is insufficient</li>
+            <li><strong>Local Deployment:</strong> Full on-premises deployment with SharePoint integration</li>
+            <li><strong>Change Detection:</strong> Automatic sync with change tracking using ETags</li>
+        </ul>
+
+        <h3>Business Value</h3>
+        <ul>
+            <li>Reduces document search time through semantic understanding</li>
+            <li>Improves answer accuracy through multi-layered quality checks</li>
+            <li>Enables enterprise document governance via SharePoint integration</li>
+            <li>Maintains data privacy with local deployment option</li>
+            <li>Reduces manual knowledge base maintenance</li>
+        </ul>
+
+        <!-- Project Objectives -->
+        <h2>Project Objectives</h2>
+
+        <h3>Primary Objectives</h3>
+        <ol>
+            <li><strong>Enable Rapid Question Answering</strong>
+                <ul>
+                    <li>Users can ask natural language questions about uploaded documents</li>
+                    <li>System retrieves relevant information and generates contextual answers</li>
+                    <li>Responses include source citations for verification</li>
+                </ul>
+            </li>
+            <li><strong>Ensure Answer Quality</strong>
+                <ul>
+                    <li>Implement self-grading to identify hallucinations</li>
+                    <li>Use retry logic to find better answers if initial retrieval fails</li>
+                    <li>Provide relevancy scoring for transparency</li>
+                </ul>
+            </li>
+            <li><strong>Support Enterprise Deployment</strong>
+                <ul>
+                    <li>Integrate with SharePoint for document governance</li>
+                    <li>Local deployment capability for data privacy</li>
+                    <li>Change detection to prevent duplicate processing</li>
+                    <li>Audit trail for compliance and troubleshooting</li>
+                </ul>
+            </li>
+            <li><strong>Provide Superior User Experience</strong>
+                <ul>
+                    <li>Intuitive web interface with Material Design</li>
+                    <li>Real-time progress indicators during processing</li>
+                    <li>Clear presentation of answer quality and sources</li>
+                    <li>Multi-tab interface for different workflows</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>Success Metrics</h3>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Target</th>
+            </tr>
+            <tr>
+                <td>Average response time</td>
+                <td>&lt; 5 seconds for question answering</td>
+            </tr>
+            <tr>
+                <td>Answer accuracy</td>
+                <td>&gt; 90% for in-document questions</td>
+            </tr>
+            <tr>
+                <td>System availability</td>
+                <td>&gt; 99.5% uptime</td>
+            </tr>
+            <tr>
+                <td>User adoption</td>
+                <td>Minimal training required</td>
+            </tr>
+            <tr>
+                <td>Scalability</td>
+                <td>Support for 1000+ documents and concurrent users</td>
+            </tr>
+        </table>
+
+        <!-- Technical Architecture -->
+        <h2>Technical Architecture</h2>
+
+        <h3>System Architecture Overview</h3>
+        <div class="box">
+            <strong>Architecture Layers:</strong>
+            <ul>
+                <li><strong>Data Layer:</strong> Pinecone (vector DB), SQLite (local state), SharePoint (documents)</li>
+                <li><strong>Service Layer:</strong> Business logic with 10 specialized services</li>
+                <li><strong>API Layer:</strong> RESTful endpoints using minimal API pattern</li>
+                <li><strong>Presentation Layer:</strong> Angular 17 with Material Design</li>
+            </ul>
+        </div>
+
+        <h3>Key Components</h3>
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Responsibility</th>
+            </tr>
+            <tr>
+                <td>DocumentService</td>
+                <td>File upload, parsing, lifecycle management</td>
+            </tr>
+            <tr>
+                <td>ChunkingService</td>
+                <td>Text splitting with overlap</td>
+            </tr>
+            <tr>
+                <td>EmbeddingService</td>
+                <td>Vector generation (OpenAI/HuggingFace)</td>
+            </tr>
+            <tr>
+                <td>PineconeService</td>
+                <td>Vector database operations</td>
+            </tr>
+            <tr>
+                <td>ChatService</td>
+                <td>RAG orchestration and answer generation</td>
+            </tr>
+            <tr>
+                <td>QueryTransformationService</td>
+                <td>Query optimization</td>
+            </tr>
+            <tr>
+                <td>AnswerGradingService</td>
+                <td>Answer quality validation</td>
+            </tr>
+            <tr>
+                <td>SharePointService</td>
+                <td>SharePoint integration</td>
+            </tr>
+            <tr>
+                <td>SyncPipelineService</td>
+                <td>Document synchronization</td>
+            </tr>
+            <tr>
+                <td>WebSearchService</td>
+                <td>Web search fallback</td>
+            </tr>
+        </table>
+
+        <!-- Technologies & Stack -->
+        <h2>Technologies & Stack</h2>
+
+        <h3>Backend Stack</h3>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Technology</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Framework</td>
+                <td>ASP.NET Core 8.0</td>
+                <td>Web API foundation</td>
+            </tr>
+            <tr>
+                <td>Database</td>
+                <td>Entity Framework Core 8.0</td>
+                <td>ORM and data access</td>
+            </tr>
+            <tr>
+                <td>Local Storage</td>
+                <td>SQLite</td>
+                <td>Persistent state management</td>
+            </tr>
+            <tr>
+                <td>Logging</td>
+                <td>Serilog</td>
+                <td>Structured logging</td>
+            </tr>
+            <tr>
+                <td>Document Processing</td>
+                <td>iTextSharp, OpenXML SDK</td>
+                <td>PDF and DOCX extraction</td>
+            </tr>
+        </table>
+
+        <h3>Frontend Stack</h3>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Technology</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Framework</td>
+                <td>Angular 17</td>
+                <td>SPA framework</td>
+            </tr>
+            <tr>
+                <td>UI Library</td>
+                <td>Angular Material</td>
+                <td>Component library</td>
+            </tr>
+            <tr>
+                <td>Reactive</td>
+                <td>RxJS Observables</td>
+                <td>Async operations</td>
+            </tr>
+            <tr>
+                <td>Forms</td>
+                <td>Reactive Forms</td>
+                <td>Form handling</td>
+            </tr>
+        </table>
+
+        <h3>External Services</h3>
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+                <th>Fallback</th>
+            </tr>
+            <tr>
+                <td>OpenAI GPT-3.5/4</td>
+                <td>LLM for answer generation</td>
+                <td>N/A (primary)</td>
+            </tr>
+            <tr>
+                <td>OpenAI Embeddings</td>
+                <td>Text to vector conversion</td>
+                <td>HuggingFace</td>
+            </tr>
+            <tr>
+                <td>Pinecone</td>
+                <td>Vector database</td>
+                <td>N/A (primary)</td>
+            </tr>
+            <tr>
+                <td>SharePoint Online</td>
+                <td>Enterprise documents</td>
+                <td>Local uploads</td>
+            </tr>
+            <tr>
+                <td>DuckDuckGo</td>
+                <td>Web search fallback</td>
+                <td>N/A (fallback)</td>
+            </tr>
+        </table>
+
+        <div class="page-break"></div>
+
+        <!-- Advanced Techniques -->
+        <h2>Advanced Techniques</h2>
+
+        <h3>Query Transformation</h3>
+        <p>The system intelligently optimizes user queries before retrieval to improve search results.</p>
+
+        <h4>Query Expansion</h4>
+        <p>Generates alternative phrasings of the user's question:</p>
+        <pre>User Input: "How do I fix memory leaks?"
+
+Generated Variations:
+1. "Methods to resolve memory leaks"
+2. "Memory leak debugging techniques"
+3. "Memory management troubleshooting strategies"
+4. "Resolving memory leak issues"
+5. "How to identify and fix memory leaks"</pre>
+
+        <h4>Query Decomposition</h4>
+        <p>Breaks complex questions into simpler sub-questions:</p>
+        <pre>User Input: "What is machine learning and how does deep learning work?"
+
+Decomposed Queries:
+1. "What is machine learning?"
+2. "How does deep learning work?"
+3. "Relationship between machine learning and deep learning"</pre>
+
+        <h3>Answer Grading & Validation</h3>
+        <p>Ensures answers are grounded in retrieved context and prevents hallucinations.</p>
+
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Definition</th>
+                <th>Weight</th>
+            </tr>
+            <tr>
+                <td>Groundedness</td>
+                <td>Is answer supported by context?</td>
+                <td>40%</td>
+            </tr>
+            <tr>
+                <td>Relevancy</td>
+                <td>Does answer address the question?</td>
+                <td>40%</td>
+            </tr>
+            <tr>
+                <td>Accuracy</td>
+                <td>Are facts correct per context?</td>
+                <td>15%</td>
+            </tr>
+            <tr>
+                <td>Completeness</td>
+                <td>Does it cover key aspects?</td>
+                <td>5%</td>
+            </tr>
+        </table>
+
+        <h3>Intelligent Retry Logic</h3>
+        <p>Progressively relaxes search parameters to find better answers:</p>
+        <div class="box">
+            <strong>Retry Strategy:</strong>
+            <ul>
+                <li><strong>Attempt 1 (Strict):</strong> Threshold 0.7, Top K chunks: 5, Original + Expanded Queries</li>
+                <li><strong>Attempt 2 (Relaxed):</strong> Threshold 0.5, Top K chunks: 7, Decomposed Queries</li>
+                <li><strong>Attempt 3 (Very Relaxed):</strong> Threshold 0.3, Top K chunks: 10, All Variations Combined</li>
+                <li><strong>Fallback:</strong> Web Search (if all retries fail)</li>
+            </ul>
+        </div>
+
+        <h3>Web Search Fallback</h3>
+        <p>Provides answers from web when document knowledge is insufficient, with clear attribution.</p>
+
+        <!-- User Guide -->
+        <h2>User Guide</h2>
+
+        <h3>Getting Started</h3>
+
+        <h4>First Time Setup</h4>
+        <ol>
+            <li>Open browser and navigate to <code>http://localhost:4200</code></li>
+            <li>You should see the AMA RAG Chatbot homepage</li>
+            <li>Verify all 4 tabs are visible: Upload, Chat, Documents, SharePoint Sync</li>
+        </ol>
+
+        <h3>Uploading Documents</h3>
+
+        <h4>Supported Formats</h4>
+        <ul>
+            <li>PDF (.pdf)</li>
+            <li>Word Documents (.docx)</li>
+            <li>Maximum file size: 50 MB</li>
+            <li>Multiple files can be uploaded at once</li>
+        </ul>
+
+        <h4>Upload Process</h4>
+        <ol>
+            <li>Click on "Upload Documents" tab</li>
+            <li>Drag and drop files or click to browse</li>
+            <li>Monitor progress bar</li>
+            <li>Verification appears when complete</li>
+        </ol>
+
+        <h3>Asking Questions</h3>
+
+        <h4>Basic Process</h4>
+        <ol>
+            <li>Click on "Chat" tab</li>
+            <li>Type your question in natural language</li>
+            <li>Optionally adjust parameters (Max Chunks, Threshold)</li>
+            <li>Click "Ask" or press Enter</li>
+            <li>View response with quality score and sources</li>
+        </ol>
+
+        <h4>Understanding Quality Scores</h4>
+        <table>
+            <tr>
+                <th>Score Range</th>
+                <th>Rating</th>
+                <th>Meaning</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>0.9 - 1.0</td>
+                <td>High</td>
+                <td>Well-grounded, likely accurate</td>
+                <td>Accept</td>
+            </tr>
+            <tr>
+                <td>0.7 - 0.89</td>
+                <td>Medium</td>
+                <td>Mostly accurate, minor uncertainties</td>
+                <td>Accept with verification</td>
+            </tr>
+            <tr>
+                <td>0.5 - 0.69</td>
+                <td>Low</td>
+                <td>Has gaps or missing context</td>
+                <td>Cross-reference</td>
+            </tr>
+            <tr>
+                <td>&lt; 0.5</td>
+                <td>Very Low</td>
+                <td>May not be grounded in documents</td>
+                <td>Don't rely on</td>
+            </tr>
+        </table>
+
+        <h3>Managing Documents</h3>
+
+        <h4>View All Documents</h4>
+        <ul>
+            <li>Click on "Documents" tab</li>
+            <li>Shows all uploaded documents</li>
+            <li>Displays: Name, Type, Chunks, Upload Date</li>
+            <li>Search box to filter by name</li>
+        </ul>
+
+        <h4>Document Actions</h4>
+        <ul>
+            <li><strong>View:</strong> Opens original document</li>
+            <li><strong>Delete:</strong> Removes from system and Pinecone</li>
+        </ul>
+
+        <h3>SharePoint Synchronization</h3>
+
+        <h4>Prerequisites</h4>
+        <ul>
+            <li>SharePoint Online access</li>
+            <li>Folder containing PDF/DOCX documents</li>
+            <li>Service account credentials</li>
+        </ul>
+
+        <h4>Sync Process</h4>
+        <ol>
+            <li>Click "SharePoint Sync" tab</li>
+            <li>Choose Custom or Default folder</li>
+            <li>Click "Start Sync"</li>
+            <li>Monitor progress</li>
+            <li>Check "Sync History" tab for results</li>
+        </ol>
+
+        <h4>Incremental Syncs</h4>
+        <ul>
+            <li>Only processes new/changed files</li>
+            <li>Uses ETag for change detection</li>
+            <li>Saves time and API costs</li>
+            <li>Skips unchanged files automatically</li>
+        </ul>
+
+        <!-- API Reference -->
+        <h2>API Reference</h2>
+
+        <h3>Base URL</h3>
+        <pre>Production:  https://yourdomain.com/api/v1
+Development: https://localhost:5000/api/v1</pre>
+
+        <h3>Document Endpoints</h3>
+
+        <h4>Upload Document</h4>
+        <pre>POST /documents/upload
+Content-Type: multipart/form-data
+
+Request:
+  file: (binary) PDF or DOCX file
+
+Response (200 OK):
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "filename": "document.pdf",
+  "status": "Ready",
+  "chunks": 45
+}</pre>
+
+        <h4>List Documents</h4>
+        <pre>GET /documents
+
+Response (200 OK):
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "filename": "document.pdf",
+    "status": "Ready",
+    "chunks": 45
+  }
+]</pre>
+
+        <h4>Delete Document</h4>
+        <pre>DELETE /documents/{id}
+
+Response (200 OK):
+{
+  "success": true,
+  "message": "Document deleted successfully"
+}</pre>
+
+        <h3>Chat Endpoints</h3>
+
+        <h4>Ask Question</h4>
+        <pre>POST /chat/ask
+Content-Type: application/json
+
+Request:
+{
+  "question": "What is the main topic?",
+  "maxContextChunks": 5,
+  "similarityThreshold": 0.7
+}
+
+Response (200 OK):
+{
+  "answer": "The main topic is...",
+  "relevancyScore": 0.85,
+  "sources": [...],
+  "retryCount": 0
+}</pre>
+
+        <h3>Sync Endpoints</h3>
+
+        <h4>Start Sync</h4>
+        <pre>POST /sync/start
+  or
+POST /sync/start/{folderPath}
+
+Response (202 Accepted):
+{
+  "syncJobId": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "Running"
+}</pre>
+
+        <h4>Get Sync Status</h4>
+        <pre>GET /sync/status/{jobId}
+
+Response (200 OK):
+{
+  "syncJobId": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "Running",
+  "filesDiscovered": 42,
+  "filesProcessed": 28,
+  "filesFailed": 2,
+  "filesSkipped": 12,
+  "progressPercentage": 66.7
+}</pre>
+
+        <!-- Deployment -->
+        <h2>Deployment Instructions</h2>
+
+        <h3>Local Development</h3>
+        <pre>Backend:
+cd AmaRAGBackend
+dotnet run
+
+Frontend:
+cd AmaRAGUI
+ng serve
+
+Access:
+http://localhost:4200</pre>
+
+        <h3>Configuration</h3>
+        <p>Update <code>appsettings.json</code> with:</p>
+        <ul>
+            <li>OpenAI API Key</li>
+            <li>Pinecone credentials</li>
+            <li>SharePoint configuration</li>
+        </ul>
+
+        <!-- Troubleshooting -->
+        <h2>Troubleshooting & Support</h2>
+
+        <h3>Common Issues</h3>
+
+        <h4>Backend Won't Start</h4>
+        <div class="box error">
+            <strong>Error:</strong> "Failed to bind to address"
+            <p><strong>Solution:</strong> Port 5000 already in use. Change port in launchSettings.json</p>
+        </div>
+
+        <h4>No Results for Question</h4>
+        <div class="box warning">
+            <strong>Possible Causes:</strong>
+            <ul>
+                <li>Document doesn't contain relevant information</li>
+                <li>Question phrased differently than document</li>
+                <li>Similarity threshold too high</li>
+            </ul>
+            <strong>Solutions:</strong>
+            <ul>
+                <li>Rephrase question</li>
+                <li>Lower similarity threshold</li>
+                <li>Upload additional documents</li>
+            </ul>
+        </div>
+
+        <h4>SharePoint Connection Fails</h4>
+        <div class="box error">
+            <strong>Check:</strong>
+            <ul>
+                <li>Username format: user@tenant.onmicrosoft.com</li>
+                <li>Password is correct</li>
+                <li>Account has folder read access</li>
+                <li>Network can reach SharePoint</li>
+            </ul>
+        </div>
+
+        <!-- Appendix -->
+        <h2>Quick Reference</h2>
+
+        <h3>Default Configuration</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Port</th>
+                <th>URL</th>
+            </tr>
+            <tr>
+                <td>Backend</td>
+                <td>5000</td>
+                <td>https://localhost:5000</td>
+            </tr>
+            <tr>
+                <td>Frontend</td>
+                <td>4200</td>
+                <td>http://localhost:4200</td>
+            </tr>
+            <tr>
+                <td>Database</td>
+                <td>N/A</td>
+                <td>amaRAG.db (file-based)</td>
+            </tr>
+            <tr>
+                <td>Swagger Docs</td>
+                <td>5000</td>
+                <td>https://localhost:5000/swagger</td>
+            </tr>
+        </table>
+
+        <h3>Quick Start Commands</h3>
+        <pre>Backend:
+cd AmaRAGBackend
+dotnet run
+
+Frontend:
+cd AmaRAGUI
+ng serve
+
+Browser:
+http://localhost:4200</pre>
+
+        <!-- Footer -->
+        <div style="margin-top: 50px; border-top: 2px solid #ddd; padding-top: 20px; color: #999; font-size: 0.9em; text-align: center;">
+            <p><strong>AMA RAG Chatbot</strong> - Professional Project Documentation v3.0</p>
+            <p>March 28, 2026 | Project Status: Production Ready</p>
+            <p style="margin-top: 20px; font-size: 0.85em;">
+                <strong>How to Print to PDF:</strong> Use your browser's Print function (Ctrl+P or Cmd+P) and select "Save as PDF"
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Print-friendly script
+        console.log('To convert this HTML to PDF:');
+        console.log('1. Press Ctrl+P (or Cmd+P on Mac)');
+        console.log('2. Select "Save as PDF" as the printer');
+        console.log('3. Configure as needed and save');
+    </script>
+</body>
+</html>

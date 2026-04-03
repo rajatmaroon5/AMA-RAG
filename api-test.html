@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMA RAG - API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background: #f9f9f9;
+        }
+        .endpoint {
+            background: #e7f3ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .response {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AMA RAG - Backend API Tester</h1>
+        <p>Test the backend API directly without needing the Angular frontend.</p>
+        
+        <div class="section">
+            <h2>📄 Documents Endpoints</h2>
+            
+            <div class="endpoint">
+                <h3>GET - List All Documents</h3>
+                <p>Retrieve all uploaded documents</p>
+                <button onclick="testGetDocuments()">Test GET /api/v1/documents</button>
+                <div id="response-docs" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3>POST - Upload Document</h3>
+                <p>Upload a PDF or DOCX file</p>
+                <input type="file" id="fileInput" accept=".pdf,.docx" />
+                <button onclick="testUploadDocument()">Test POST /api/v1/documents/upload</button>
+                <div id="response-upload" class="response" style="display:none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <h3>GET - View Document Chunks</h3>
+                <p>View all chunks created from an uploaded document</p>
+                <input type="text" id="chunksDocumentId" placeholder="Enter Document ID (from upload response)" />
+                <button onclick="testGetDocumentChunks()">Test GET /api/v1/documents/{documentId}/chunks</button>
+                <div id="response-chunks" class="response" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💬 Chat Endpoints</h2>
+            
+            <div class="endpoint">
+                <h3>POST - Ask Question (RAG)</h3>
+                <p>Ask a question and get answers based on uploaded documents</p>
+                <input type="text" id="queryInput" placeholder="Enter your question..." value="What is this document about?" />
+                <button onclick="testAskQuestion()">Test POST /api/v1/chat/ask</button>
+                <div id="response-chat" class="response" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Backend Status</h2>
+            <button onclick="testBackendHealth()">Check Backend Health</button>
+            <div id="response-health" class="response" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:5000";
+
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(data, null, 2);
+            element.classList.remove(isError ? 'success' : 'error');
+            element.classList.add(isError ? 'error' : 'success');
+            element.style.display = 'block';
+        }
+
+        function showError(elementId, error) {
+            const element = document.getElementById(elementId);
+            element.textContent = `Error: ${error}`;
+            element.classList.add('error');
+            element.style.display = 'block';
+        }
+
+        async function testBackendHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/documents`, {
+                    method: 'GET'
+                });
+                const text = await response.text();
+                showResponse('response-health', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    message: '✅ Backend is responding!',
+                    response: text ? JSON.parse(text) : 'Empty response'
+                });
+            } catch (error) {
+                showError('response-health', error.message);
+            }
+        }
+
+        async function testGetDocuments() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/documents`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                showResponse('response-docs', {
+                    status: response.status,
+                    message: response.ok ? '✅ Success' : '❌ Failed',
+                    data: data || []
+                });
+            } catch (error) {
+                showError('response-docs', error.message);
+            }
+        }
+
+        async function testUploadDocument() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) {
+                showError('response-upload', 'Please select a file first');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/documents/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                // Auto-populate chunks document ID
+                if (data.documentId) {
+                    document.getElementById('chunksDocumentId').value = data.documentId;
+                }
+                
+                showResponse('response-upload', {
+                    status: response.status,
+                    message: response.ok ? '✅ Upload successful' : '❌ Upload failed',
+                    data: data
+                });
+            } catch (error) {
+                showError('response-upload', error.message);
+            }
+        }
+
+        async function testAskQuestion() {
+            const question = document.getElementById('queryInput').value;
+            if (!question.trim()) {
+                showError('response-chat', 'Please enter a question');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/chat/ask`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        question: question,
+                        maxContextChunks: 5,
+                        similarityThreshold: 0.5
+                    })
+                });
+                const data = await response.json();
+                showResponse('response-chat', {
+                    status: response.status,
+                    message: response.ok ? '✅ Query successful' : '❌ Query failed',
+                    data: data
+                });
+            } catch (error) {
+                showError('response-chat', error.message);
+            }
+        }
+
+        async function testGetDocumentChunks() {
+            const documentId = document.getElementById('chunksDocumentId').value;
+            if (!documentId.trim()) {
+                showError('response-chunks', 'Please enter a Document ID');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/documents/${documentId}/chunks`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    showError('response-chunks', `Error: ${response.status} - Document not found`);
+                    return;
+                }
+                
+                const chunks = await response.json();
+                
+                if (chunks.length === 0) {
+                    showResponse('response-chunks', {
+                        status: response.status,
+                        message: '✅ No chunks found',
+                        data: chunks
+                    });
+                    return;
+                }
+
+                // Format chunks for display
+                const formattedChunks = chunks.map((chunk, idx) => ({
+                    "Chunk #": chunk.chunkIndex + 1,
+                    "Content": chunk.content.substring(0, 100) + (chunk.content.length > 100 ? '...' : ''),
+                    "Full Content": chunk.content,
+                    "Vector ID": chunk.vectorId,
+                    "Created": chunk.createdAt
+                }));
+
+                showResponse('response-chunks', {
+                    status: response.status,
+                    message: `✅ Retrieved ${chunks.length} chunks`,
+                    totalChunks: chunks.length,
+                    chunks: formattedChunks
+                });
+            } catch (error) {
+                showError('response-chunks', error.message);
+            }
+        }
+
+        // Test health on page load
+        window.onload = () => {
+            testBackendHealth();
+        };
+    </script>
+</body>
+</html>
